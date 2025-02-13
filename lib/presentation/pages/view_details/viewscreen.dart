@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studdataapp/core/constants/colorconst.dart';
-import 'package:studdataapp/core/constants/txtconst.dart';
 import 'package:studdataapp/presentation/pages/view_details/widgets/data_details.dart';
 import 'package:studdataapp/presentation/pages/view_details/widgets/delete_student_button.dart';
 import 'package:studdataapp/presentation/pages/view_details/widgets/edit_student_button.dart';
