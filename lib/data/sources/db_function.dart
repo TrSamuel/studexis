@@ -62,9 +62,11 @@ class Dbfunctions {
   }
 
   Future<void> addStudentData({required StudentModel studentModel}) async {
-    try {
+    await studentBox.put(studentModel.studentId, studentModel);
+  }
+
+  Future<void> editStudentData({required StudentModel studentModel}) async {
       await studentBox.put(studentModel.studentId, studentModel);
-    } catch (e) {}
   }
 
   Future<List<StudentModel>> getStudentsData() async {
@@ -75,7 +77,7 @@ class Dbfunctions {
     await studentBox.delete(studentId);
   }
 
-  Future<void> deleteTable() async {
+  Future<void> deleteAll() async {
     await studentBox.deleteAll(studentBox.keys);
   }
 }

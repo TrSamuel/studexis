@@ -1,46 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studdataapp/core/constants/colorconst.dart';
-import 'package:studdataapp/core/constants/txtconst.dart';
 import 'package:studdataapp/data/model/student_model.dart';
 import 'package:studdataapp/data/sources/db_function.dart';
-import 'package:studdataapp/function/selectimg.dart';
-import 'package:studdataapp/presentation/pages/add_student/widgets/student_class_selector.dart';
+import 'package:studdataapp/presentation/pages/add_edit_student/widgets/student_class_selector.dart';
+import 'package:studdataapp/presentation/pages/add_edit_student/widgets/student_photo_selector.dart';
 import 'package:studdataapp/presentation/widgets/data_enter_fields.dart';
 import 'package:studdataapp/presentation/widgets/show_msg_snackbar.dart';
-import 'package:studdataapp/presentation/widgets/valuenotifiers.dart';
 import 'package:studdataapp/state/providers/student_provider.dart';
 
-class AddStudDataScreen extends StatefulWidget {
-  const AddStudDataScreen({
+class AddEditScreen extends StatefulWidget {
+  final StudentModel? studentModel;
+  const AddEditScreen({
     super.key,
+    this.studentModel,
   });
 
   @override
-  State<AddStudDataScreen> createState() => _AddStudDataScreenState();
+  State<AddEditScreen> createState() => _AddEditScreenState();
 }
 
-class _AddStudDataScreenState extends State<AddStudDataScreen> {
+class _AddEditScreenState extends State<AddEditScreen> {
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final ageController = TextEditingController();
   final addressController = TextEditingController();
 
   @override
+  void initState() {
+    if (widget.studentModel != null) {
+      nameController.text = widget.studentModel!.studentName;
+      ageController.text = widget.studentModel!.studentAge.toString();
+      addressController.text = widget.studentModel!.studentAddress;
+    }
+    super.initState();
+  }
+
+  @override
   void dispose() {
     nameController.dispose();
     ageController.dispose();
     addressController.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final studentNotifierData =
+        Provider.of<StudentNotifier>(context, listen: false);
+    const height15 = SizedBox(
+      height: 15,
+    );
     return Scaffold(
       appBar: AppBar(
         foregroundColor: secondaryColor,
-        title: const Text('Add student'),
+        title:
+            Text(widget.studentModel == null ? 'Add student' : 'Edit student'),
         backgroundColor: primaryColor,
+        leading: IconButton(
+            onPressed: () {
+              studentNotifierData.resetStudentPhoto();
+              studentNotifierData.clearSelectedClass();
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back)),
       ),
       body: Container(
         width: double.infinity,
@@ -60,54 +84,34 @@ class _AddStudDataScreenState extends State<AddStudDataScreen> {
                   const SizedBox(
                     height: 45,
                   ),
-                  ValueListenableBuilder(
-                    valueListenable: imgPreview,
-                    builder: (context, value, child) {
-                      return value != null
-                          ? GestureDetector(
-                              onTap: () async {
-                                await selectImage();
-                              },
-                              child: Stack(
-                                alignment: Alignment.bottomRight,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 45,
-                                    foregroundImage: MemoryImage(value),
-                                  ),
-                                  const Icon(
-                                    Icons.camera_alt,
-                                    color: primaryColor,
-                                  ),
-                                ],
-                              ),
-                            )
-                          : IconButton(
-                              color: primaryColor,
-                              onPressed: () async {
-                                await selectImage();
-                              },
-                              icon: const Icon(Icons.camera_alt),
-                            );
-                    },
-                  ),
+                  const StudentPhotoSelector(),
+                  height15,
                   DataEnterFields(
+                    labelTextName: 'Name',
                     hintTextName: 'Name',
                     textController: nameController,
                     textInputType: TextInputType.name,
                   ),
+                  height15,
                   DataEnterFields(
+                    labelTextName: 'Age',
                     textInputType: TextInputType.number,
                     hintTextName: 'Age',
                     textController: ageController,
                   ),
+                  height15,
                   DataEnterFields(
+                    labelTextName: 'Address',
                     hintTextName: 'Address',
                     textInputType: TextInputType.multiline,
                     textController: addressController,
                     maxLines: 3,
                   ),
+                  height15,
                   const StudentClassSelector(),
+                  const SizedBox(
+                    height: 75,
+                  ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
@@ -118,7 +122,8 @@ class _AddStudDataScreenState extends State<AddStudDataScreen> {
                     onPressed: () async {
                       validateData();
                     },
-                    child: const Text("Submit"),
+                    child:
+                        Text(widget.studentModel == null ? "Save" : "Update"),
                   ),
                 ],
               ),
@@ -133,7 +138,7 @@ class _AddStudDataScreenState extends State<AddStudDataScreen> {
     final studentNotifierData =
         Provider.of<StudentNotifier>(context, listen: false);
     if (formKey.currentState!.validate()) {
-      if (imgPreview.value == null) {
+      if (studentNotifierData.studentPhoto == null) {
         showMessageSnackBar(
             context: context,
             color: errorColor,
@@ -145,18 +150,23 @@ class _AddStudDataScreenState extends State<AddStudDataScreen> {
             message: "Please select student class");
       } else {
         final StudentModel studentModel = StudentModel(
-          studentId: DateTime.now().millisecondsSinceEpoch.toString(),
+          studentId: widget.studentModel == null
+              ? DateTime.now().millisecondsSinceEpoch.toString()
+              : widget.studentModel!.studentId,
           studentName: nameController.text,
-          studentPhoto: imgPreview.value!,
+          studentPhoto: studentNotifierData.studentPhoto!,
           studentAge: int.parse(ageController.text),
           studentAddress: addressController.text,
           studentClass: studentNotifierData.selectedClass,
         );
         await Dbfunctions.instance.addStudentData(studentModel: studentModel);
+        studentNotifierData.selectStudent(studentMOdel: studentModel);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: successColor,
-            content: Text("Data added successfully"),
+            content: Text(widget.studentModel == null
+                ? "Data saved successfully"
+                : "Data updated successfully"),
           ),
         );
         nameController.clear();
@@ -164,7 +174,7 @@ class _AddStudDataScreenState extends State<AddStudDataScreen> {
         addressController.clear();
         studentNotifierData.clearSelectedClass();
         studentNotifierData.getStudents();
-        imgPreview.value = null;
+        studentNotifierData.resetStudentPhoto();
         Navigator.pop(context);
       }
     }

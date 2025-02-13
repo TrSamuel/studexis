@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studdataapp/data/sources/db_function.dart';
-import 'package:studdataapp/presentation/pages/homescreen/homescreen.dart';
-import 'package:studdataapp/presentation/pages/add_student/addstuddatascreen.dart';
-import 'package:studdataapp/presentation/pages/loginscreen/loginscreen.dart';
-import 'package:studdataapp/presentation/pages/registerscreen.dart/registerscreen.dart';
-import 'package:studdataapp/presentation/pages/splashscreen/splashscreen.dart';
+import 'package:studdataapp/presentation/pages/home/homescreen.dart';
+import 'package:studdataapp/presentation/pages/add_edit_student/add_edit_screen.dart';
+import 'package:studdataapp/presentation/pages/login/loginscreen.dart';
+import 'package:studdataapp/presentation/pages/register/registerscreen.dart';
+import 'package:studdataapp/presentation/pages/splash/splashscreen.dart';
 import 'package:studdataapp/state/providers/student_provider.dart';
 
 Future<void> main() async {
@@ -27,10 +27,10 @@ class StudDataApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes: {
           'splash-screen': (context) => const SplashScreen(),
-          'home-screen': (context) => HomeScreen(),
+          'home-screen': (context) => const HomeScreen(),
           'login-screen': (context) => const Loginscreen(),
           'register-screen': (context) => const RegisterScreen(),
-          'add-stud-data-screen': (context) => const AddStudDataScreen(),
+          'add-stud-data-screen': (context) => const AddEditScreen(),
         },
         initialRoute: 'splash-screen',
       ),

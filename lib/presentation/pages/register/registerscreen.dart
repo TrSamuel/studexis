@@ -3,6 +3,7 @@ import 'package:studdataapp/core/constants/colorconst.dart';
 import 'package:studdataapp/core/constants/txtconst.dart';
 import 'package:studdataapp/data/sources/db_function.dart';
 import 'package:studdataapp/presentation/widgets/data_enter_fields.dart';
+import 'package:studdataapp/presentation/widgets/show_msg_snackbar.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -33,16 +34,21 @@ class RegisterScreen extends StatelessWidget {
                 ),
               ),
               DataEnterFields(
+                labelTextName: 'Email',
                 textController: emailCotroller,
                 hintTextName: 'Email',
               ),
               DataEnterFields(
+                labelTextName: 'Password',
                 textController: passwordController,
                 hintTextName: 'Password',
+                isPassword: true,
               ),
               DataEnterFields(
+                labelTextName: 'Confirm Password',
                 textController: confirmPasswordController,
                 hintTextName: 'Confirm Password',
+                isPassword: true,
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -62,39 +68,27 @@ class RegisterScreen extends StatelessWidget {
                         RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])');
 
                     if (!emailRegex.hasMatch(emailCotroller.text)) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: errorColor,
-                          content: Text("Invalid email"),
-                        ),
-                      );
+                      showMessageSnackBar(
+                          context: context,
+                          message: "Invalid email",
+                          color: errorColor);
                     } else if (!passwordRegex
                         .hasMatch(passwordController.text)) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: errorColor,
-                          content: Text(
-                              "Password Must include uppercase letters, lowercase letters and numbers"),
-                        ),
-                      );
+                       showMessageSnackBar(
+                          context: context,
+                          message: "Password Must include uppercase letters, lowercase letters and numbers",
+                          color: errorColor);
                     } else if (passwordController.text.length < 8) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: errorColor,
-                          content: Text(
-                            "Password length must be atleast 8 characters",
-                          ),
-                        ),
-                      );
+                       showMessageSnackBar(
+                          context: context,
+                          message: "Password length must be atleast 8 characters",
+                          color: errorColor);
                     } else if (passwordController.text !=
                         confirmPasswordController.text) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: errorColor,
-                          content: Text(
-                              "Password and Confirm password didn't match"),
-                        ),
-                      );
+                       showMessageSnackBar(
+                          context: context,
+                          message:  "Password and Confirm password didn't match",
+                          color: errorColor);
                     } else {
                       Dbfunctions.instance.registerAuth(
                         email: emailCotroller.text,

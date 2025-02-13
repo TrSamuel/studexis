@@ -22,21 +22,24 @@ class Loginscreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 appName,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: primaryColor,
                 ),
               ),
               DataEnterFields(
+                labelTextName: 'Email',
                 textController: emailCotroller,
                 hintTextName: 'Email',
               ),
               DataEnterFields(
+                labelTextName: 'Password',
                 textController: passwordController,
                 hintTextName: 'Password',
+                isPassword: true,
               ),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(

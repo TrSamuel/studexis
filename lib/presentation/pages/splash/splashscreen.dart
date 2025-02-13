@@ -15,6 +15,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    Provider.of<StudentNotifier>(context,listen: false).getStudents();
     Future.delayed(
       const Duration(seconds: 3),
       () async {
@@ -33,7 +34,6 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void moveHomeScreen() {
-    Provider.of<StudentNotifier>(context,listen: false).getStudents();
     Navigator.pushReplacementNamed(context, "home-screen");
   }
 
