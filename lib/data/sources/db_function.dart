@@ -16,7 +16,7 @@ class Dbfunctions {
     return instance;
   }
 
-  Future<void> initDB() async {
+  Future<void> initDB() async { 
     await Hive.initFlutter();
     if (!Hive.isAdapterRegistered(StudentModelAdapter().typeId)) {
       Hive.registerAdapter(StudentModelAdapter());

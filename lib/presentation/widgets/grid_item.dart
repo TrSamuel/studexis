@@ -4,6 +4,8 @@ import 'package:studdataapp/data/model/student_model.dart';
 import 'package:studdataapp/presentation/pages/home/widgets/grid_view/widgets/student_name.dart';
 import 'package:studdataapp/presentation/pages/home/widgets/grid_view/widgets/student_photo.dart';
 import 'package:studdataapp/presentation/pages/view_details/viewscreen.dart';
+import 'package:studdataapp/presentation/pages/view_details/widgets/delete_student_button.dart';
+import 'package:studdataapp/presentation/pages/view_details/widgets/edit_student_button.dart';
 import 'package:studdataapp/state/providers/student_provider.dart';
 
 class GridItem extends StatelessWidget {
@@ -32,6 +34,13 @@ class GridItem extends StatelessWidget {
           children: [
             StudentPhoto(student: student),
             StudentName(student: student),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                EditStudentButton(studentModel: student),
+                DeleteStudentButton(studentModel: student)
+              ],
+            )
           ],
         ),
       ),

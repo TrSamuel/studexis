@@ -17,19 +17,34 @@ class DataEnterFields extends StatelessWidget {
     this.maxLines,
     this.textInputType,
     required this.labelTextName,
-    this.isPassword=false,
+    this.isPassword = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    double fieldWidth;
+
+    if (size.width > 900) {
+      fieldWidth = size.width * 0.4;
+    } else if (size.width > 600) {
+      fieldWidth = size.width * 0.6;
+    } else {
+      fieldWidth = size.width * 0.9;
+    }
     return Padding(
-      padding: const EdgeInsets.only(bottom: 15),
+      padding: EdgeInsets.symmetric(
+        vertical: 15,
+        horizontal: (size.width - fieldWidth) / 2,
+      ),
       child: TextFormField(
         controller: textController,
-        maxLines: !isPassword?maxLines:1,
+        maxLines: !isPassword ? maxLines : 1,
         keyboardType: textInputType,
         obscureText: isPassword,
-        inputFormatters: textInputType==TextInputType.number?[FilteringTextInputFormatter.digitsOnly]:null,
+        inputFormatters: textInputType == TextInputType.number
+            ? [FilteringTextInputFormatter.digitsOnly]
+            : null,
         decoration: InputDecoration(
           hintText: hintTextName,
           labelText: labelTextName,
@@ -37,7 +52,6 @@ class DataEnterFields extends StatelessWidget {
               borderSide: BorderSide(color: primaryColor)),
           focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: primaryColor)),
-        
         ),
         validator: (value) {
           if (value!.trim().isEmpty) {

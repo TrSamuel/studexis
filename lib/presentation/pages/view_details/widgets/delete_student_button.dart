@@ -38,7 +38,7 @@ class DeleteStudentButton extends StatelessWidget {
                   );
                   studentNotifierData.getStudents();
                   Navigator.pop(context);
-                  Navigator.pop(context);
+                  Navigator.maybePop(context);
                 },
                 child: const Text("Confirm"),
               ),

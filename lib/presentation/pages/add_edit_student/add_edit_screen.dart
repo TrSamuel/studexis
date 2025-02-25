@@ -52,6 +52,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
     const height15 = SizedBox(
       height: 15,
     );
+    final Size size=MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
         foregroundColor: secondaryColor,
@@ -108,7 +109,7 @@ class _AddEditScreenState extends State<AddEditScreen> {
                     maxLines: 3,
                   ),
                   height15,
-                  const StudentClassSelector(),
+                  StudentClassSelector(size: size,),
                   const SizedBox(
                     height: 75,
                   ),
